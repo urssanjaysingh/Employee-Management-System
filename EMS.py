@@ -37,26 +37,25 @@ def menu():
                     |                                |
                     |________________________________|
             """)
-        try:
-            choice1 = int(input("\n\n\t\tEnter your choice: "))
-            if choice1 == 1:
-                display()
-                os.system("pause")
-                menu()
-                break
-            elif choice1 == 2:
-                edit()
-                break
-            elif choice1 == 3:
-                os.system("cls")
-                search()
-                break
-            elif choice1 == 4:
-                os.system("cls")
-                break
-        except ValueError:
+        choice1 = int(input("\n\n\t\tEnter your choice: "))
+        if choice1 == 1:
+            display()
+            os.system("pause")
+            menu()
+            break
+        elif choice1 == 2:
+            edit()
+            break
+        elif choice1 == 3:
             os.system("cls")
-            print("\n\n\t\tInvalid Input! Please Try Again.")
+            search()
+            break
+        elif choice1 == 4:
+            os._exit(0)
+        else:
+            print("\n\n\t\tInvalid Input! Please Try Again.\n\n")
+            os.system("pause")
+            menu()
 
 
 def display():
@@ -99,9 +98,11 @@ def edit():
             remove()
             break
         elif choice2 == 4:
-            os.system("cls")
-            menu()
-            break
+            return menu()
+        else:
+            print("\n\n\t\tInvalid Input! Please Try Again.\n\n")
+            os.system("pause")
+            edit()
 
 
 def add():
@@ -115,20 +116,28 @@ def add():
             csvwriter = csv.writer(file)
             csvwriter.writerow(header)
     print("\n\t\t *** Add Employee Details ***\n")
-    with open("employees.csv", "a", newline="") as file:
-        w = csv.writer(file)
-        ans = 'Y'
-        while ans.lower() == 'y':
-            empId = input("\n\t\tEmployee ID: ")
-            fName = input("\n\t\tFirst Name: ")
-            lName = input("\n\t\tLast Name: ")
-            age = input("\n\t\tAge: ")
-            salary = input("\n\t\tSalary: ")
-            phoneNo = input("\n\t\tPhone NO: ")
-            address = input("\n\t\tAddress: ")
-            w.writerow([empId, fName, lName, age, salary, phoneNo, address])
-            print("\n\t\tRecord Added!!")
-            ans = input("\nDo you want add more employee?\nEnter[Y/N]: ")
+    empId = input("\n\t\tEmployee ID: ")
+    with open("employees.csv", "r") as csvfile:
+        csvreader = csv.DictReader(csvfile)
+        for row in csvreader:
+            if row["Employee ID"] == empId:
+                print("\n\t\tThis Employee ID already in use!\n")
+                os.system("pause")
+                edit()
+        else:
+            with open("employees.csv", "a", newline="") as file:
+                w = csv.writer(file)
+                ans = 'Y'
+                while ans.lower() == 'y':
+                    fName = input("\n\t\tFirst Name: ")
+                    lName = input("\n\t\tLast Name: ")
+                    age = input("\n\t\tAge: ")
+                    salary = input("\n\t\tSalary: ")
+                    phoneNo = input("\n\t\tPhone NO: ")
+                    address = input("\n\t\tAddress: ")
+                    w.writerow([empId, fName, lName, age, salary, phoneNo, address])
+                    print("\n\t\tRecord Added!!")
+                    ans = input("\nDo you want add more employee?\nEnter[Y/N]: ")
     os.system("cls")
     edit()
 
